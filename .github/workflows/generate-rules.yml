@@ -1,0 +1,145 @@
+name: Generate RULE-SET from OpenCCK Lists
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 06:17 и 18:17 по МСК
+    - cron: "17 3,15 * * *"
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**/README.md"
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set variables
+        run: |
+          echo "RELEASE_NAME=Released on $(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+          echo "TAG_NAME=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+
+          echo "opencck_base=https://iplist.opencck.org" >> $GITHUB_ENV
+
+          echo "opencck_group_porno=porn" >> $GITHUB_ENV
+          echo "opencck_group_discord=discord" >> $GITHUB_ENV
+          echo "opencck_group_youtube=youtube" >> $GITHUB_ENV
+          echo "opencck_group_socials=socials" >> $GITHUB_ENV
+          echo "opencck_group_torrent=torrent" >> $GITHUB_ENV
+          echo "opencck_group_tools=tools" >> $GITHUB_ENV
+          echo "opencck_group_music=music" >> $GITHUB_ENV
+
+          echo "opencck_roblox=https://iplist.opencck.org/?format=text&data=domains&site=roblox.com" >> $GITHUB_ENV
+          echo "opencck_telegram=https://iplist.opencck.org/?format=text&data=domains&site=telegram.org" >> $GITHUB_ENV
+
+          echo "antifilter_domains=https://antifilter.download/list/domains.lst" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Checkout the main branch
+        uses: actions/checkout@v6
+
+      - name: Generate rule files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          generate_rules_url() {
+            local url="$1"
+            local output="$2"
+            local max_attempts=6
+            local attempt=1
+
+            while [ $attempt -le $max_attempts ]; do
+              echo "Generating $output from $url (attempt $attempt/$max_attempts)"
+              echo "payload:" > "$output"
+
+              if content="$(curl -fsSL \
+                  --connect-timeout 15 --max-time 120 \
+                  --retry 8 --retry-all-errors --retry-delay 2 --retry-max-time 180 \
+                  -H 'User-Agent: github-actions (rule-set generator)' \
+                  "$url")"; then
+
+                echo "$content" | grep -vE '^\s*#' | grep -vE '^\s*$' | while IFS= read -r domain; do
+                  if [[ $domain =~ ^www\. ]]; then
+                    echo "  - '${domain}'" >> "$output"
+                    echo "  - '+.${domain#www.}'" >> "$output"
+                  else
+                    echo "  - '+.${domain}'" >> "$output"
+                  fi
+                done
+
+                echo "✅ Success: $output"
+                return 0
+              else
+                echo "❌ curl failed for $output (attempt $attempt/$max_attempts)"
+                sleep $((attempt * 3))
+                attempt=$((attempt + 1))
+              fi
+            done
+
+            echo "❌ Failed after $max_attempts attempts: $output"
+            return 1
+          }
+
+          generate_rules_group() {
+            local group="$1"
+            local output="$2"
+            local url="${opencck_base}/?format=text&data=domains&group=${group}"
+            generate_rules_url "$url" "$output"
+          }
+
+          generate_rules_group "${opencck_group_porno}"   "porno.txt"
+          generate_rules_group "${opencck_group_discord}" "discord.txt"
+          generate_rules_group "${opencck_group_youtube}" "youtube.txt"
+          generate_rules_group "${opencck_group_socials}" "socials.txt"
+          generate_rules_group "${opencck_group_torrent}" "torrent.txt"
+          generate_rules_group "${opencck_group_tools}"   "tools.txt"
+          generate_rules_group "${opencck_group_music}"   "music.txt"
+
+          generate_rules_url "${opencck_roblox}"  "roblox.txt"
+          generate_rules_url "${opencck_telegram}" "telegram.txt"
+
+          generate_rules_url "${antifilter_domains}" "antifilter.txt"
+
+          echo "All files generated successfully!"
+
+      - name: Move files to publish directory
+        run: |
+          mkdir -p publish
+          cp *.txt ./publish/
+
+      - name: Release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ env.RELEASE_NAME }}
+          tag_name: ${{ env.TAG_NAME }}
+          draft: false
+          prerelease: false
+          files: |
+            ./publish/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Git push assets to "release" branch
+        run: |
+          cd publish || exit 1
+          git init
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b release
+          git add .
+          git commit -m "${{ env.RELEASE_NAME }}"
+          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git push -f origin release
+
+      - name: Purge jsdelivr CDN
+        run: |
+          cd publish || exit 1
+          for file in $(ls); do
+            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@release/${file}"
+          done
