@@ -11,36 +11,36 @@ This project generates rules for [Clash Premium](https://github.com/Dreamacro/cl
 Use these URLs in your Clash configuration in the `rule-providers` section:
 
 - **Adult Content Sites (porno.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/porno.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/porno.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/porno.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/porno.txt`
 
 - **Discord (discord.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/discord.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/discord.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/discord.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/discord.txt`
 
 - **YouTube (youtube.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/youtube.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/youtube.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/youtube.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/youtube.txt`
 
 - **Social Networks (socials.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/socials.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/socials.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/socials.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/socials.txt`
 
 - **Torrent Sites (torrent.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/torrent.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/torrent.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/torrent.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/torrent.txt`
 
 - **Developer Tools (tools.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/tools.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/tools.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/tools.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/tools.txt`
 
 - **Music Services (music.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/music.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/music.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/music.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/music.txt`
 
 - **Roblox (roblox.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/roblox.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/roblox.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/roblox.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/roblox.txt`
 
 ## Usage
 
@@ -51,49 +51,49 @@ rule-providers:
   porno:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/porno.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/porno.txt"
     path: ./ruleset/porno.yaml
     interval: 86400
 
   discord:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/discord.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/discord.txt"
     path: ./ruleset/discord.yaml
     interval: 86400
 
   youtube:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/youtube.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/youtube.txt"
     path: ./ruleset/youtube.yaml
     interval: 86400
 
   socials:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/socials.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/socials.txt"
     path: ./ruleset/socials.yaml
     interval: 86400
 
   torrent:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/torrent.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/torrent.txt"
     path: ./ruleset/torrent.yaml
     interval: 86400
 
   tools:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/tools.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/tools.txt"
     path: ./ruleset/tools.yaml
     interval: 86400
 
   music:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/music.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/music.txt"
     path: ./ruleset/music.yaml
     interval: 86400
 ```
@@ -185,7 +185,7 @@ All rules are generated based on domain lists from [OpenCCK](https://iplist.open
 
 1. Create a new repository on GitHub
 2. Copy files from this project
-3. Replace `nellimonix/ClashXRule` in README with actual values
+3. Replace `nesavage/MyClashRules` in README with actual values
 4. Enable GitHub Actions in repository settings
 5. Run the workflow manually or wait for automatic execution
 
