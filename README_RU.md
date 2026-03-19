@@ -11,32 +11,32 @@
 Используйте эти URL в конфигурации Clash в секции `rule-providers`:
 
 - **Порнографические сайты (porno.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/porno.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/porno.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/porno.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/porno.txt`
 
 - **Discord (discord.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/discord.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/discord.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/discord.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/discord.txt`
 
 - **YouTube (youtube.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/youtube.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/youtube.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/youtube.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/youtube.txt`
 
 - **Социальные сети (socials.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/socials.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/socials.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/socials.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/socials.txt`
 
 - **Торренты (torrent.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/torrent.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/torrent.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/torrent.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/torrent.txt`
 
 - **Инструменты разработки (tools.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/tools.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/tools.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/tools.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/tools.txt`
 
 - **Музыкальные сервисы (music.txt)**:
-  - `https://raw.githubusercontent.com/nellimonix/ClashXRule/release/music.txt`
-  - `https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/music.txt`
+  - `https://raw.githubusercontent.com/nesavage/MyClashRules/release/music.txt`
+  - `https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/music.txt`
 
 ## Использование
 
@@ -47,49 +47,49 @@ rule-providers:
   porno:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/porno.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/porno.txt"
     path: ./ruleset/porno.yaml
     interval: 86400
 
   discord:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/discord.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/discord.txt"
     path: ./ruleset/discord.yaml
     interval: 86400
 
   youtube:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/youtube.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/youtube.txt"
     path: ./ruleset/youtube.yaml
     interval: 86400
 
   socials:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/socials.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/socials.txt"
     path: ./ruleset/socials.yaml
     interval: 86400
 
   torrent:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/torrent.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/torrent.txt"
     path: ./ruleset/torrent.yaml
     interval: 86400
 
   tools:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/tools.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/tools.txt"
     path: ./ruleset/tools.yaml
     interval: 86400
 
   music:
     type: http
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/nellimonix/ClashXRule@release/music.txt"
+    url: "https://cdn.jsdelivr.net/gh/nesavage/MyClashRules@release/music.txt"
     path: ./ruleset/music.yaml
     interval: 86400
 ```
@@ -181,7 +181,7 @@ rules:
 
 1. Создайте новый репозиторий на GitHub
 2. Скопируйте файлы из этого проекта
-3. Замените `nellimonix/ClashXRule` в README на реальные значения
+3. Замените `nesavage/MyClashRules` в README на реальные значения
 4. Включите GitHub Actions в настройках репозитория
 5. Запустите workflow вручную или дождитесь автоматического выполнения
 
