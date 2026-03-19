@@ -26,6 +26,7 @@ jobs:
 
           echo "opencck_base=https://iplist.opencck.org" >> $GITHUB_ENV
 
+          # Группы OpenCCK
           echo "opencck_group_porno=porn" >> $GITHUB_ENV
           echo "opencck_group_discord=discord" >> $GITHUB_ENV
           echo "opencck_group_youtube=youtube" >> $GITHUB_ENV
@@ -33,11 +34,19 @@ jobs:
           echo "opencck_group_torrent=torrent" >> $GITHUB_ENV
           echo "opencck_group_tools=tools" >> $GITHUB_ENV
           echo "opencck_group_music=music" >> $GITHUB_ENV
+          
+          # 🆕 НОВЫЕ группы
+          echo "opencck_group_art=art" >> $GITHUB_ENV
+          echo "opencck_group_games=games" >> $GITHUB_ENV
+          echo "opencck_group_messengers=messengers" >> $GITHUB_ENV
 
+          # Отдельные URL
           echo "opencck_roblox=https://iplist.opencck.org/?format=text&data=domains&site=roblox.com" >> $GITHUB_ENV
           echo "opencck_telegram=https://iplist.opencck.org/?format=text&data=domains&site=telegram.org" >> $GITHUB_ENV
-
           echo "antifilter_domains=https://antifilter.download/list/domains.lst" >> $GITHUB_ENV
+          
+          # 🆕 НОВЫЕ источники
+          echo "antizapret_domains=https://antizapret.prostovpn.org/domains-export.txt" >> $GITHUB_ENV
         shell: bash
 
       - name: Checkout the main branch
@@ -93,6 +102,7 @@ jobs:
             generate_rules_url "$url" "$output"
           }
 
+          # === Существующие правила ===
           generate_rules_group "${opencck_group_porno}"   "porno.txt"
           generate_rules_group "${opencck_group_discord}" "discord.txt"
           generate_rules_group "${opencck_group_youtube}" "youtube.txt"
@@ -103,8 +113,13 @@ jobs:
 
           generate_rules_url "${opencck_roblox}"  "roblox.txt"
           generate_rules_url "${opencck_telegram}" "telegram.txt"
-
           generate_rules_url "${antifilter_domains}" "antifilter.txt"
+
+          # === 🆕 НОВЫЕ правила ===
+          generate_rules_group "${opencck_group_art}" "art.txt"
+          generate_rules_group "${opencck_group_games}" "games.txt"
+          generate_rules_group "${opencck_group_messengers}" "messengers.txt"
+          generate_rules_url "${antizapret_domains}" "antizapret.txt"
 
           echo "All files generated successfully!"
 
