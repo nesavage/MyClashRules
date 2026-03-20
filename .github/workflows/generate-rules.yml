@@ -3,7 +3,6 @@ name: Generate RULE-SET from OpenCCK Lists
 on:
   workflow_dispatch:
   schedule:
-    # 06:17 и 18:17 по МСК
     - cron: "17 3,15 * * *"
   push:
     branches:
@@ -26,7 +25,6 @@ jobs:
 
           echo "opencck_base=https://iplist.opencck.org" >> $GITHUB_ENV
 
-          # Группы OpenCCK
           echo "opencck_group_porno=porn" >> $GITHUB_ENV
           echo "opencck_group_discord=discord" >> $GITHUB_ENV
           echo "opencck_group_youtube=youtube" >> $GITHUB_ENV
@@ -34,18 +32,11 @@ jobs:
           echo "opencck_group_torrent=torrent" >> $GITHUB_ENV
           echo "opencck_group_tools=tools" >> $GITHUB_ENV
           echo "opencck_group_music=music" >> $GITHUB_ENV
-          
-          # 🆕 НОВЫЕ группы
           echo "opencck_group_art=art" >> $GITHUB_ENV
           echo "opencck_group_games=games" >> $GITHUB_ENV
           echo "opencck_group_messengers=messengers" >> $GITHUB_ENV
 
-          # Отдельные URL
-          echo "opencck_roblox=https://iplist.opencck.org/?format=text&data=domains&site=roblox.com" >> $GITHUB_ENV
-          echo "opencck_telegram=https://iplist.opencck.org/?format=text&data=domains&site=telegram.org" >> $GITHUB_ENV
           echo "antifilter_domains=https://antifilter.download/list/domains.lst" >> $GITHUB_ENV
-          
-          # 🆕 НОВЫЕ источники
           echo "antizapret_domains=https://antizapret.prostovpn.org/domains-export.txt" >> $GITHUB_ENV
         shell: bash
 
@@ -95,6 +86,54 @@ jobs:
             return 1
           }
 
+          generate_rules_url_split() {
+            local url="$1"
+            local output_base="$2"
+            local max_attempts=6
+            local attempt=1
+
+            while [ $attempt -le $max_attempts ]; do
+              echo "Generating $output_base from $url (attempt $attempt/$max_attempts)"
+              local temp_file=$(mktemp)
+              
+              if content="$(curl -fsSL \
+                  --connect-timeout 15 --max-time 300 \
+                  --retry 8 --retry-all-errors --retry-delay 2 --retry-max-time 300 \
+                  -H 'User-Agent: github-actions (rule-set generator)' \
+                  "$url")"; then
+
+                echo "$content" | grep -vE '^\s*#' | grep -vE '^\s*$' | while IFS= read -r domain; do
+                  if [[ $domain =~ ^www\. ]]; then
+                    echo "  - '${domain}'"
+                    echo "  - '+.${domain#www.}'"
+                  else
+                    echo "  - '+.${domain}'"
+                  fi
+                done > "$temp_file"
+                
+                local total_lines=$(wc -l < "$temp_file")
+                local half=$(( (total_lines + 1) / 2 ))
+                
+                echo "payload:" > "${output_base}_part1.txt"
+                head -n "$half" "$temp_file" >> "${output_base}_part1.txt"
+                
+                echo "payload:" > "${output_base}_part2.txt"
+                tail -n +$((half + 1)) "$temp_file" >> "${output_base}_part2.txt"
+                
+                rm -f "$temp_file"
+                echo "✅ Success: ${output_base}_part1.txt ($half lines) + ${output_base}_part2.txt ($((total_lines - half)) lines)"
+                return 0
+              else
+                echo "❌ curl failed for $output_base (attempt $attempt/$max_attempts)"
+                sleep $((attempt * 3))
+                attempt=$((attempt + 1))
+                rm -f "$temp_file" 2>/dev/null || true
+              fi
+            done
+            echo "❌ Failed after $max_attempts attempts: $output_base"
+            return 1
+          }
+
           generate_rules_group() {
             local group="$1"
             local output="$2"
@@ -102,7 +141,6 @@ jobs:
             generate_rules_url "$url" "$output"
           }
 
-          # === Существующие правила ===
           generate_rules_group "${opencck_group_porno}"   "porno.txt"
           generate_rules_group "${opencck_group_discord}" "discord.txt"
           generate_rules_group "${opencck_group_youtube}" "youtube.txt"
@@ -110,15 +148,11 @@ jobs:
           generate_rules_group "${opencck_group_torrent}" "torrent.txt"
           generate_rules_group "${opencck_group_tools}"   "tools.txt"
           generate_rules_group "${opencck_group_music}"   "music.txt"
-
-          generate_rules_url "${opencck_roblox}"  "roblox.txt"
-          generate_rules_url "${opencck_telegram}" "telegram.txt"
-          generate_rules_url "${antifilter_domains}" "antifilter.txt"
-
-          # === 🆕 НОВЫЕ правила ===
           generate_rules_group "${opencck_group_art}" "art.txt"
           generate_rules_group "${opencck_group_games}" "games.txt"
           generate_rules_group "${opencck_group_messengers}" "messengers.txt"
+
+          generate_rules_url_split "${antifilter_domains}" "antifilter"
           generate_rules_url "${antizapret_domains}" "antizapret.txt"
 
           echo "All files generated successfully!"
