@@ -86,54 +86,6 @@ jobs:
             return 1
           }
 
-          generate_rules_url_split() {
-            local url="$1"
-            local output_base="$2"
-            local max_attempts=6
-            local attempt=1
-
-            while [ $attempt -le $max_attempts ]; do
-              echo "Generating $output_base from $url (attempt $attempt/$max_attempts)"
-              local temp_file=$(mktemp)
-              
-              if content="$(curl -fsSL \
-                  --connect-timeout 15 --max-time 300 \
-                  --retry 8 --retry-all-errors --retry-delay 2 --retry-max-time 300 \
-                  -H 'User-Agent: github-actions (rule-set generator)' \
-                  "$url")"; then
-
-                echo "$content" | grep -vE '^\s*#' | grep -vE '^\s*$' | while IFS= read -r domain; do
-                  if [[ $domain =~ ^www\. ]]; then
-                    echo "  - '${domain}'"
-                    echo "  - '+.${domain#www.}'"
-                  else
-                    echo "  - '+.${domain}'"
-                  fi
-                done > "$temp_file"
-                
-                local total_lines=$(wc -l < "$temp_file")
-                local half=$(( (total_lines + 1) / 2 ))
-                
-                echo "payload:" > "${output_base}_part1.txt"
-                head -n "$half" "$temp_file" >> "${output_base}_part1.txt"
-                
-                echo "payload:" > "${output_base}_part2.txt"
-                tail -n +$((half + 1)) "$temp_file" >> "${output_base}_part2.txt"
-                
-                rm -f "$temp_file"
-                echo "✅ Success: ${output_base}_part1.txt ($half lines) + ${output_base}_part2.txt ($((total_lines - half)) lines)"
-                return 0
-              else
-                echo "❌ curl failed for $output_base (attempt $attempt/$max_attempts)"
-                sleep $((attempt * 3))
-                attempt=$((attempt + 1))
-                rm -f "$temp_file" 2>/dev/null || true
-              fi
-            done
-            echo "❌ Failed after $max_attempts attempts: $output_base"
-            return 1
-          }
-
           generate_rules_group() {
             local group="$1"
             local output="$2"
@@ -152,7 +104,7 @@ jobs:
           generate_rules_group "${opencck_group_games}" "games.txt"
           generate_rules_group "${opencck_group_messengers}" "messengers.txt"
 
-          generate_rules_url_split "${refilter_domains}" "refilter"
+          generate_rules_url "${refilter_domains}" "refilter.txt"
           generate_rules_url "${antizapret_domains}" "antizapret.txt"
 
           echo "All files generated successfully!"
