@@ -36,7 +36,7 @@ jobs:
           echo "opencck_group_games=games" >> $GITHUB_ENV
           echo "opencck_group_messengers=messengers" >> $GITHUB_ENV
 
-          echo "antifilter_domains=https://antifilter.download/list/domains.lst" >> $GITHUB_ENV
+          echo "refilter_domains=https://raw.githubusercontent.com/1andrevich/Re-filter-lists/refs/heads/main/domains_all.lst" >> $GITHUB_ENV
           echo "antizapret_domains=https://antizapret.prostovpn.org/domains-export.txt" >> $GITHUB_ENV
         shell: bash
 
@@ -152,7 +152,7 @@ jobs:
           generate_rules_group "${opencck_group_games}" "games.txt"
           generate_rules_group "${opencck_group_messengers}" "messengers.txt"
 
-          generate_rules_url_split "${antifilter_domains}" "antifilter"
+          generate_rules_url_split "${refilter_domains}" "refilter"
           generate_rules_url "${antizapret_domains}" "antizapret.txt"
 
           echo "All files generated successfully!"
